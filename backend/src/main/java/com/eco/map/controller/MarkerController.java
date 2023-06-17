@@ -30,4 +30,9 @@ public class MarkerController {
     public void deleteById(@PathVariable Long id) {
         markerService.deleteById(id);
     }
+
+    @PostMapping("/markers")
+    public Marker save(@RequestBody Marker marker){
+        return markerService.save(marker);
+    }
 }

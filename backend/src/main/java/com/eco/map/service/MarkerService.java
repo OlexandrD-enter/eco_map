@@ -23,4 +23,8 @@ public class MarkerService {
     public void deleteById(Long id) {
         markerRepository.deleteById(id);
     }
+
+    public Marker save(Marker marker){
+        return markerRepository.save(marker);
+    }
 }

@@ -5,5 +5,10 @@ export const getMarkers = async () => {
 };
 
 export const deleteMarkerById = (id) => {
-    return axios.delete(`http://localhost:8088/map/markers/${id}`);
-  };
+  return axios.delete(`http://localhost:8088/map/markers/${id}`);
+};
+
+export const saveMarker = async (markerData) => {
+  return (await axios.post("http://localhost:8088/map/markers", markerData))
+    .data;
+};
