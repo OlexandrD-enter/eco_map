@@ -20,4 +20,7 @@ public class MarkerService {
         return markerRepository.findAll();
     }
 
+    public void deleteById(Long id) {
+        markerRepository.deleteById(id);
+    }
 }

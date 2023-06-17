@@ -3,7 +3,10 @@ package com.eco.map.controller;
 import com.eco.map.model.Marker;
 import com.eco.map.service.MarkerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -23,4 +26,8 @@ public class MarkerController {
         return markerService.findAll();
     }
 
+    @DeleteMapping("/markers/{id}")
+    public void deleteById(@PathVariable Long id) {
+        markerService.deleteById(id);
+    }
 }
