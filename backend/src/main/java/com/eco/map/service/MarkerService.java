@@ -24,7 +24,7 @@ public class MarkerService {
         markerRepository.deleteById(id);
     }
 
-    public Marker save(Marker marker){
+    public Marker save(Marker marker) {
         return markerRepository.save(marker);
     }
 }

@@ -12,3 +12,7 @@ export const saveMarker = async (markerData) => {
   return (await axios.post("http://localhost:8088/map/markers", markerData))
     .data;
 };
+
+export const getTypes = async () => {
+  return (await axios.get("http://localhost:8088/map/types"));
+};

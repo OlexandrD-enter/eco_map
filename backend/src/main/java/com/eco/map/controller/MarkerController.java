@@ -2,9 +2,8 @@ package com.eco.map.controller;
 
 import com.eco.map.model.Marker;
 import com.eco.map.service.MarkerService;
+import com.eco.map.service.TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,10 +14,12 @@ import java.util.List;
 public class MarkerController {
 
     private final MarkerService markerService;
+    private final TypeService typeService;
 
     @Autowired
-    public MarkerController(MarkerService markerService) {
+    public MarkerController(MarkerService markerService, TypeService typeService) {
         this.markerService = markerService;
+        this.typeService = typeService;
     }
 
     @GetMapping("/markers")
@@ -32,7 +33,7 @@ public class MarkerController {
     }
 
     @PostMapping("/markers")
-    public Marker save(@RequestBody Marker marker){
+    public Marker save(@RequestBody Marker marker) {
         return markerService.save(marker);
     }
 }
