@@ -18,6 +18,7 @@ function App() {
   const [markers, setMarkers] = useRecoilState(markersAtom);
   const [selectedMarker, setSelectedMarker] = useRecoilState(currentMarkerAtom);
   const [newMarker, setNewMarker] = useRecoilState(newMarkerAtom);
+  const [selectedMarkerId, setSelectedMarkerId] = useState(null);
 
   useEffect(() => {
     fetchMarkers();
@@ -45,10 +46,12 @@ function App() {
 
   const handleMarkerClick = (marker) => {
     setSelectedMarker(marker);
+    setSelectedMarkerId(marker.id);
   };
 
   const handleInfoWindowClose = () => {
     setSelectedMarker(null);
+    setSelectedMarkerId(null);
   };
 
   const handleNewMarkerClick = () => {
@@ -90,7 +93,7 @@ function App() {
               onClick={() => handleMarkerClick(marker)}
             />
           ))}
-          {selectedMarker && (
+          {selectedMarker && selectedMarkerId === selectedMarker.id && (
             <InfoWindow
               position={selectedMarker}
               onCloseClick={handleInfoWindowClose}
@@ -104,7 +107,10 @@ function App() {
             </Marker>
           )}
           {newMarker.isAdded && newMarker.isClicked && (
-            <InfoWindow position={newMarker} onCloseClick={handleInfoWindowClose}>
+            <InfoWindow
+              position={newMarker}
+              onCloseClick={handleInfoWindowClose}
+            >
               <NewPopup />
             </InfoWindow>
           )}
