@@ -25,3 +25,7 @@ export const saveMarkerParams = async (markerParamsData) => {
   return (await axios.post("http://localhost:8088/map/marker_parameters", markerParamsData))
     .data;
 };
+
+export const getMarkerParameters = async (id) => {
+  return await axios.get(`http://localhost:8088/map/marker_parameters/${id}`);
+};

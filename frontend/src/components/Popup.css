@@ -1,0 +1,10 @@
+.param-row {
+    display: flex;
+    align-items: center;
+  }
+  
+  .param-title {
+    width: 100px;
+    margin-right: 10px;
+  }
+  

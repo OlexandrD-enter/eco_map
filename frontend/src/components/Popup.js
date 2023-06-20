@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Modal, Select, Space } from "antd";
+import { Form, Input, Button, Modal, Select, Space, List } from "antd";
 import { deleteMarkerById } from "../api";
 import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
 import { markersAtom, currentMarkerAtom } from "../state/states";
-import { getMarkers, getParameters, saveMarkerParams } from "../api";
 import {
-  DeleteOutlined
-} from "@ant-design/icons";
+  getMarkers,
+  getParameters,
+  saveMarkerParams,
+  getMarkerParameters,
+} from "../api";
+import { DeleteOutlined } from "@ant-design/icons";
+import "./Popup.css"
 const { Option } = Select;
 
 export default function Popup({ marker }) {
@@ -15,6 +19,7 @@ export default function Popup({ marker }) {
   const [parameters, setParameters] = useState([]);
   const [newParameter, setNewParameter] = useState({ name: "", value: "" });
   const [optionsData, setOptionsData] = useState([]);
+  const [markerParams, setMarkerParams] = useState([]);
 
   const handleDelete = async () => {
     const remove = async () => {
@@ -48,7 +53,9 @@ export default function Popup({ marker }) {
 
   const handleSave = () => {
     const updatedParameters = parameters.map((parameter) => {
-      const matchingOption = optionsData.find((option) => option.name === parameter.name);
+      const matchingOption = optionsData.find(
+        (option) => option.name === parameter.name
+      );
       return {
         marker: selectedMarker,
         parameter: matchingOption,
@@ -75,30 +82,42 @@ export default function Popup({ marker }) {
         const response = await getParameters(marker.type.id);
         const params = response.data;
         setOptionsData(params);
+
+        const availableParams = (await getMarkerParameters(marker.id)).data;
+        setMarkerParams(availableParams);
       } catch (error) {
         console.error(error);
       }
     };
     fetchParameters();
-  }, [marker]);
+  }, [marker, markerParams]);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString("en-GB");
+    const formattedTime = date.toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    return `${formattedDate} ${formattedTime}`;
+  };
 
   return (
     <div className="popup-container">
-      <Form className="popup-form">
-        <Form.Item label="Title" style={formItemStyle}>
-          <Input value={marker.title} readOnly />
-        </Form.Item>
-        <Form.Item label="Latitude" style={formItemStyle}>
-          <Input value={marker.lat} readOnly />
-        </Form.Item>
-        <Form.Item label="Longitude" style={formItemStyle}>
-          <Input value={marker.lng} readOnly />
-        </Form.Item>
-        <Form.Item label="Type" style={formItemStyle}>
-          <Input value={marker.type.name} readOnly />
-        </Form.Item>
-      </Form>
-
+    <div className="param-row">
+      <span className="param-title">Title: </span> <b>{marker.title}</b>
+    </div>
+    <hr />
+    <div className="param-row">
+      <span className="param-title">Coordinates:</span>{" "}
+      <b>{marker.lng}, {marker.lat}</b>
+    </div>
+    <hr />
+    <div className="param-row">
+      <span className="param-title">Type:</span>{" "}
+      <b>{marker.type.name }</b>
+    </div>
+    <hr />
       <Form className="popup-form">
         {parameters.map((parameter, index) => (
           <div key={index} style={{ marginBottom: "10px" }}>
@@ -135,14 +154,38 @@ export default function Popup({ marker }) {
             </Space>
           </div>
         ))}
-
+       {/* Scrollable List */}
+      <div style={{ maxHeight: "200px", overflowY: "auto" }}>
+        {markerParams.length > 0 ? (
+          <List
+            itemLayout="vertical"
+            size="large"
+            dataSource={markerParams}
+            renderItem={(parameter) => (
+              <List.Item>
+                <Space>
+                  <span>Name: {parameter.parameter.name}</span>
+                  <span>Value: {parameter.value}</span>
+                  <span>Date: {formatDate(parameter.dateAdded)}</span>
+                </Space>
+              </List.Item>
+            )}
+          />
+        ) : (
+          <p></p>
+        )}
+      </div>
         {/* Button to add a new parameter */}
         <Button type="primary" onClick={handleAddParameter}>
           Add Parameter
         </Button>
 
         {/* Button to save the parameters */}
-        <Button type="primary" style={{ marginTop: "10px" }} onClick={handleSave}>
+        <Button
+          type="primary"
+          style={{ marginTop: "10px" }}
+          onClick={handleSave}
+        >
           Save Parameters
         </Button>
       </Form>
@@ -154,8 +197,3 @@ export default function Popup({ marker }) {
     </div>
   );
 }
-
-
-
-
-

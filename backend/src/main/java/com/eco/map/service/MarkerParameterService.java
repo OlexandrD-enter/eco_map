@@ -21,4 +21,8 @@ public class MarkerParameterService {
     public List<MarkerParameter> saveAll(List<MarkerParameter> markerParameters){
         return markerParameterRepository.saveAll(markerParameters);
     }
+
+    public List<MarkerParameter> findAllByMarkerIdOrderByLastDate(Long id){
+        return markerParameterRepository.findLastUniqueParamsByMarkerId(id);
+    }
 }
