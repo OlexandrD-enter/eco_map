@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button, Modal, Select, Space, List } from "antd";
 import { deleteMarkerById } from "../api";
-import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
-import { markersAtom, currentMarkerAtom } from "../state/states";
+import { useSetRecoilState, useRecoilState } from "recoil";
+import { markersAtom, currentMarkerAtom, filters } from "../state/states";
 import {
   getMarkers,
-  getParameters,
+  getParametersByType,
   saveMarkerParams,
   getMarkerParameters,
 } from "../api";
@@ -20,11 +20,12 @@ export default function Popup({ marker }) {
   const [newParameter, setNewParameter] = useState({ name: "", value: "" });
   const [optionsData, setOptionsData] = useState([]);
   const [markerParams, setMarkerParams] = useState([]);
+  const [filter, setFilter] = useRecoilState(filters);
 
   const handleDelete = async () => {
     const remove = async () => {
       const response = await deleteMarkerById(marker.id);
-      const markers = await getMarkers();
+      const markers = await getMarkers(filter);
       setMarkers(markers);
       setSelectedMarker(null);
     };
@@ -79,7 +80,7 @@ export default function Popup({ marker }) {
   useEffect(() => {
     const fetchParameters = async () => {
       try {
-        const response = await getParameters(marker.type.id);
+        const response = await getParametersByType(marker.type.id);
         const params = response.data;
         setOptionsData(params);
 

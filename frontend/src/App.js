@@ -6,8 +6,8 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
-import { useRecoilValue, useSetRecoilState, useRecoilState } from "recoil";
-import { markersAtom, currentMarkerAtom, newMarkerAtom } from "./state/states";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { markersAtom, currentMarkerAtom, newMarkerAtom, filters } from "./state/states";
 import { getMarkers } from "./api";
 import { REACT_APP_GOOGLE_MAPS_API_KEY } from "./credentials";
 import Popup from "./components/Popup";
@@ -19,14 +19,15 @@ function App() {
   const [selectedMarker, setSelectedMarker] = useRecoilState(currentMarkerAtom);
   const [newMarker, setNewMarker] = useRecoilState(newMarkerAtom);
   const [selectedMarkerId, setSelectedMarkerId] = useState(null);
+  const filter = useRecoilValue(filters);
 
   useEffect(() => {
     fetchMarkers();
-  }, []);
+  }, [filter]);
 
   const fetchMarkers = async () => {
     try {
-      const markers = await getMarkers();
+      const markers = await getMarkers(filter);
       setMarkers(markers);
     } catch (error) {
       // Handle any errors

@@ -36,4 +36,9 @@ public class MarkerController {
     public Marker save(@RequestBody Marker marker) {
         return markerService.save(marker);
     }
+
+    @PostMapping("/markers/filter")
+    public List<Marker> getMarkersWithFilter(@RequestBody List<String> filters){
+        return markerService.findAllWithFilter(filters);
+    }
 }

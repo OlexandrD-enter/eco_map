@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export const getMarkers = async () => {
-  return (await axios.get("http://localhost:8088/map/markers")).data;
+export const getMarkers = async (filter) => {
+  return (await axios.post("http://localhost:8088/map/markers/filter", filter)).data;
 };
 
 export const deleteMarkerById = (id) => {
@@ -17,7 +17,7 @@ export const getTypes = async () => {
   return (await axios.get("http://localhost:8088/map/types"));
 };
 
-export const getParameters = async (filter) => {
+export const getParametersByType = async (filter) => {
   return await axios.get(`http://localhost:8088/map/parameters/${filter}`);
 };
 
@@ -27,5 +27,9 @@ export const saveMarkerParams = async (markerParamsData) => {
 };
 
 export const getMarkerParameters = async (id) => {
-  return await axios.get(`http://localhost:8088/map/marker_parameters/${id}`);
+  return await axios.get(`http://localhost:8088/map/marker_parameters/id/${id}`);
+};
+
+export const getParameters = async () => {
+  return await axios.get("http://localhost:8088/map/parameters");
 };

@@ -27,4 +27,9 @@ public class MarkerService {
     public Marker save(Marker marker) {
         return markerRepository.save(marker);
     }
+
+    public List<Marker> findAllWithFilter(List<String> filter){
+        if (filter.contains("all")) return markerRepository.findAll();
+        return markerRepository.findAllMarkers(filter);
+    }
 }

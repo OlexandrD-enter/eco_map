@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Modal, Select } from "antd";
-import { newMarkerAtom, markersAtom } from "../state/states";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { Form, Input, Button, Select } from "antd";
+import { newMarkerAtom, markersAtom, filters } from "../state/states";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { saveMarker, getMarkers, getTypes } from "../api";
 import S from "./NewPopup.module.css";
 const { Option } = Select;
@@ -10,6 +10,7 @@ export default function NewPopup() {
   const setMarkers = useSetRecoilState(markersAtom);
   const [newMarker, setNewMarker] = useRecoilState(newMarkerAtom);
   const [parameters, setParameters] = useState([]);
+  const filter = useRecoilValue(filters);
 
   const handleFinish = async (values) => {
     const selectedTypeName = values.parameter;
@@ -21,7 +22,7 @@ export default function NewPopup() {
       type: selectedType,
     };
     const response = await saveMarker(markerData);
-    const markers = await getMarkers();
+    const markers = await getMarkers(filter);
     setMarkers(markers);
     setNewMarker({ isAdding: false, isAdded: false });
   };
@@ -68,8 +69,12 @@ export default function NewPopup() {
         >
           <Input required placeholder="Введіть назву" />
         </Form.Item>
-        <Form.Item label="Parameter" name="parameter">
-          <Select placeholder="Select a parameter">
+        <Form.Item
+          label="Type"
+          name="parameter"
+          rules={[{ required: true, message: "Please select a parameter!" }]}
+        >
+          <Select placeholder="Select a parameter" required>
             {parameters.map((type) => (
               <Option key={type.id} value={type.name}>
                 {type.name}

@@ -17,3 +17,8 @@ export const newMarkerAtom = atom({
     isAdded: false,
   },
 });
+
+export const filters = atom({
+  key: "filters",
+  default: ['all']
+});
